@@ -5,7 +5,7 @@ export function renderBlock(elementId: string, html: string): void {
 
 export function renderToast(
   message: { text: string; type: string },
-  action: { name: string; handler: string }
+  action: { name: string; handler: () => unknown }
 ): void {
   let messageText = '';
 
@@ -23,10 +23,10 @@ export function renderToast(
   const button = document.getElementById('toast-main-action');
   if (button != null) {
     button.onclick = function () {
-      if (action != null && action.handler != null) {
-        action.handler;
+      if (action != null && action.handler() != null) {
+        action.handler();
       }
-      renderToast(null, action);
+      renderToast(message, action);
     };
   }
 }

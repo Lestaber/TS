@@ -1,6 +1,6 @@
-import { renderBlock } from './lib.js';
-export function renderSearchFormBlock() {
-    renderBlock('search-form-block', `
+import { renderBlock } from "./lib.js";
+export function renderSearchFormBlock(searchForm) {
+    renderBlock("search-form-block", `
     <form>
       <fieldset class="search-filedset">
         <div class="row">
@@ -17,21 +17,55 @@ export function renderSearchFormBlock() {
         <div class="row">
           <div>
             <label for="check-in-date">Дата заезда</label>
-            <input id="check-in-date" type="date" value="2021-05-11" min="2021-05-11" max="2021-06-30" name="checkin" />
+            <input id="check-in-date" type="date" value="${searchForm.firstDate}" min="${searchForm.firstDate}" max="${searchForm.lastDate}" name="checkin" />
           </div>
           <div>
             <label for="check-out-date">Дата выезда</label>
-            <input id="check-out-date" type="date" value="2021-05-13" min="2021-05-11" max="2021-06-30" name="checkout" />
+            <input id="check-out-date" type="date" value="${searchForm.firstDate}" min="${searchForm.firstDate}" max="${searchForm.lastDate}" name="checkout" />
           </div>
           <div>
             <label for="max-price">Макс. цена суток</label>
             <input id="max-price" type="text" value="" name="price" class="max-price" />
           </div>
           <div>
-            <div><button>Найти</button></div>
+            <button type="submit" id="button">Найти</button>
           </div>
         </div>
       </fieldset>
     </form>
     `);
+    const realty = {
+        emptyArray: [],
+    };
+    const button = document.getElementById("button");
+    if (button != null) {
+        button.onclick = function (event) {
+            event.preventDefault();
+            const firstDateInput = (document.querySelector("#check-in-date"));
+            const lastDateInput = (document.querySelector("#check-out-date"));
+            const searchFormData = {
+                firstDate: firstDateInput.value,
+                lastDate: lastDateInput.value,
+            };
+            search(searchFormData, (emptyArray, error) => {
+                setTimeout(() => {
+                    const randNum = Math.floor(Math.random() * 10) + 1;
+                    console.log(randNum);
+                    if (randNum % 2 === 0) {
+                        console.log("200", emptyArray);
+                    }
+                    else {
+                        console.log("404", error);
+                    }
+                }, 3000);
+            });
+            function search(form, printMsg) {
+                console.log(form);
+                const result = printMsg(realty, "error");
+                if (result != undefined) {
+                    console.log(result);
+                }
+            }
+        };
+    }
 }
